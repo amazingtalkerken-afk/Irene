@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Irene's English Review &amp; 50-Question Quiz</title>
+  <style>
+    :root {
+      --bg: #f7f8fc;
+      --card: #ffffff;
+      --primary: #4f46e5;
+      --primary-soft: #eef2ff;
+      --accent: #0d9488;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --ok-bg: #ecfdf5;
+      --ok-border: #10b981;
+      --ok-text: #065f46;
+      --bad-bg: #fef2f2;
+      --bad-border: #ef4444;
+      --bad-text: #991b1b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      -webkit-tap-highlight-color: transparent;
+    }
+    header {
+      background: linear-gradient(135deg, #4f46e5, #0d9488);
+      color: #fff;
+      padding: 20px 16px 16px;
+      text-align: center;
+    }
+    header h1 { margin: 0 0 4px; font-size: 1.35rem; }
+    header p { margin: 0; font-size: 0.9rem; opacity: 0.92; }
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .tab-btn {
+      border: none;
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: #fff;
+      color: var(--primary);
+    }
+    main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .hidden { display: none !important; }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+    .card h2 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      color: var(--primary);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+    .card h3 {
+      margin: 12px 0 6px;
+      font-size: 0.98rem;
+      color: var(--accent);
+    }
+    ul.clean { padding-left: 18px; margin: 6px 0; }
+    ul.clean li { margin-bottom: 5px; }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 10px;
+    }
+    .pill {
+      display: inline-block;
+      background: var(--primary-soft);
+      color: var(--primary);
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .speak-btn {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      margin-left: 6px;
+      color: var(--text);
+    }
+    .speak-btn:active { background: var(--primary-soft); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin-top: 6px;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 7px 9px;
+      text-align: left;
+    }
+    th { background: #f1f5f9; }
+    .sticky-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .stats { font-weight: 700; font-size: 0.95rem; }
+    .progress-wrap {
+      width: 100%;
+      height: 7px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      transition: width 0.25s ease;
+    }
+    .btn-sm {
+      border: 1px solid var(--border);
+      background: #fff;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-sm.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    .section-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .q-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+    .q-meta {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .q-text {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .opts {
+      display: grid;
+      gap: 8px;
+    }
+    .opt-btn {
+      text-align: left;
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f8fafc;
+      font-size: 0.95rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .opt-btn:hover:not(:disabled) { background: var(--primary-soft); border-color: #c7d2fe; }
+    .opt-btn.correct {
+      background: var(--ok-bg);
+      border-color: var(--ok-border);
+      color: var(--ok-text);
+      font-weight: 600;
+    }
+    .opt-btn.wrong {
+      background: var(--bad-bg);
+      border-color: var(--bad-border);
+      color: var(--bad-text);
+    }
+    .feedback {
+      margin-top: 9px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      display: none;
+    }
+    .feedback.ok { display: block; background: var(--ok-bg); color: var(--ok-text); }
+    .feedback.bad { display: block; background: var(--bad-bg); color: var(--bad-text); }
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+      padding: 20px 12px 32px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Irene's English Class Review</h1>
+    <p>Daily Conversation, Travel &amp; "What Were You Like 10 Years Ago?"</p>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('review', this)">1. Key Points Review</button>
+      <button class="tab-btn" onclick="switchTab('quiz', this)">2. 50-Question Quiz</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- REVIEW SECTION -->
+    <section id="review-section">
+      <div class="card">
+        <h2>1. Greetings &amp; Daily Conversation</h2>
+        <ul class="clean">
+          <li><strong>How is everything so far this week?</strong> <button class="speak-btn" onclick="speak('How is everything so far this week?')">🔊</button><br>
+            &rarr; <em>Everything is good so far this week.</em></li>
+          <li><strong>Do you have any plans for the weekend?</strong> <button class="speak-btn" onclick="speak('Do you have any plans for the weekend?')">🔊</button><br>
+            &rarr; <em>No, I don't have any plans for the weekend.</em></li>
+          <li><strong>Job titles:</strong> nail technician / manicurist (手部美甲師) / pedicurist (足部美甲師)</li>
+          <li><strong>Time phrase:</strong> <span class="pill">these days = nowadays</span> (最近、現今)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>2. Grammar Focus</h2>
+        <h3>A. Near vs. Far &amp; Singular vs. Plural</h3>
+        <table>
+          <tr><th></th><th>Near (近)</th><th>Far (遠)</th></tr>
+          <tr><td><strong>Place</strong></td><td><strong>here</strong> (這裡)</td><td><strong>there</strong> (那裡)</td></tr>
+          <tr><td><strong>Singular (單數)</strong></td><td><strong>this</strong> (這個)</td><td><strong>that</strong> (那個) — <em>That person is immature.</em></td></tr>
+          <tr><td><strong>Plural (複數)</strong></td><td><strong>these</strong> (這些)</td><td><strong>those</strong> (那些) — <em>Those people are immature.</em></td></tr>
+        </table>
+
+        <h3>B. Past Tense (過去式) &amp; "Used to"</h3>
+        <ul class="clean">
+          <li><strong>is &rarr; was:</strong> <em>It is very delicious.</em> &rarr; <em>It <strong>was</strong> very delicious.</em> / <em>How <strong>was</strong> the hike?</em></li>
+          <li><strong>eat &rarr; ate:</strong> <em>I <strong>ate</strong> some bento at Fenchihu (奮起湖).</em></li>
+          <li><strong>see &rarr; saw:</strong> <em>I <strong>saw</strong> many ancient sacred trees.</em></li>
+          <li><strong>hike &rarr; hiked:</strong> <em>We <strong>hiked</strong> for 2 hours.</em></li>
+          <li><strong>used to + V (過去常常):</strong> <em>I <strong>used to</strong> eat birthday cake and blow out candles when I was a child.</em></li>
+        </ul>
+
+        <h3>C. Talking About Life Changes (Engoo Lesson 99)</h3>
+        <ul class="clean">
+          <li><strong>Past description:</strong> <em>What <strong>were</strong> you like 10 years ago?</em> &rarr; <em>I was extremely introverted.</em> <button class="speak-btn" onclick="speak('What were you like 10 years ago?')">🔊</button></li>
+          <li><strong>Present Perfect (現在完成式 have/has + p.p.):</strong><br>
+            <em>How <strong>have</strong> you <strong>changed</strong>?</em> &rarr; <em>I'<strong>ve become</strong> more sociable and confident.</em><br>
+            <em>How <strong>has</strong> your life <strong>changed</strong>?</em> &rarr; <em>I got married, bought a house, and got a dog.</em></li>
+          <li><strong>Future &amp; Possibility:</strong> <em>What do you think your life <strong>will</strong> be like in 10 years?</em><br>
+            <em>I <strong>might be</strong> wrinkled and gray!</em> (might 可能)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>3. Word Forms: Noun vs. Adjective</h2>
+        <div class="grid-2">
+          <div>
+            <ul class="clean">
+              <li><strong>extrovert</strong> (n.) / <strong>extroverted</strong> (adj.) 外向的<br><em>I'm an extrovert. = I'm extroverted.</em></li>
+              <li><strong>introvert</strong> (n.) / <strong>introverted</strong> (adj.) 內向的<br><em>I'm an introvert. = I'm introverted.</em></li>
+              <li><strong>society</strong> (n.) 社會 / <strong>social</strong>, <strong>sociable</strong> (adj.) 善於交際的</li>
+              <li><strong>activity</strong> (n.) 活動 / <strong>active</strong> (adj.) 活躍的 (<em>physical activity</em>)</li>
+            </ul>
+          </div>
+          <div>
+            <ul class="clean">
+              <li><strong>energy</strong> (n.) 能量 / <strong>energetic</strong> (adj.) 精力充沛的</li>
+              <li><strong>electricity</strong> (n.) 電 / <strong>electric</strong> (adj.) 電動的 / <strong>electronic</strong> (adj.) 電子的</li>
+              <li><strong>youth</strong> (n.) 青春 / <strong>youthful</strong> (adj.) 年輕有活力的</li>
+              <li><strong>wrinkle</strong> (n.) 皺紋 / <strong>wrinkled</strong> (adj.) 有皺紋的</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>4. "-able" Suffixes (可以...的) &amp; Key Vocabulary</h2>
+        <div class="grid-2">
+          <div>
+            <ul class="clean">
+              <li><strong>affordable</strong> 付得起的、平價的</li>
+              <li><strong>collectable</strong> 可收藏的 / 收藏品 (n.)</li>
+              <li><strong>enjoyable</strong> 令人愉快的</li>
+              <li><strong>laughable</strong> 可笑的</li>
+              <li><strong>manageable</strong> 可應付的、撐得住的<br><em>The workload this week is manageable.</em></li>
+              <li><strong>readable</strong> 易讀的、清晰的</li>
+              <li><strong>reasonable</strong> 合理的 (<em>The price is reasonable.</em>)</li>
+              <li><strong>usable</strong> 可使用的、沒壞的 (<em>This pencil is usable.</em>)</li>
+            </ul>
+          </div>
+          <div>
+            <ul class="clean">
+              <li><strong>ancient</strong> (adj.) 古老的 <button class="speak-btn" onclick="speak('ancient')">🔊</button></li>
+              <li><strong>sacred</strong> (adj.) 神聖的 <button class="speak-btn" onclick="speak('sacred')">🔊</button></li>
+              <li><strong>sharp</strong> (adj.) 銳利的；聰明的</li>
+              <li><strong>mature / immature</strong> 成熟的 / 不成熟的</li>
+              <li><strong>outgoing</strong> (adj.) 外向的</li>
+              <li><strong>fetch</strong> (v.) 接住；去拿來</li>
+              <li><strong>old and gray</strong> 年老髮白</li>
+              <li><strong>Engoo life events:</strong> <em>retire</em> (退休), <em>graduate</em> (畢業), <em>move out of home</em> (搬出家裡), <em>get married</em> (結婚)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>5. Pronunciation &amp; Key Sentences (Tap 🔊 to Listen)</h2>
+        <ul class="clean">
+          <li><strong>ancient</strong> (an-CIEN~~) <button class="speak-btn" onclick="speak('ancient')">🔊</button></li>
+          <li><strong>extroverted</strong> (EX-tro-ver-TED) <button class="speak-btn" onclick="speak('extroverted')">🔊</button></li>
+          <li><strong>introverted</strong> (IN-tro-ver-TED) <button class="speak-btn" onclick="speak('introverted')">🔊</button></li>
+          <li><strong>mirror</strong> (mi-ER~~) <button class="speak-btn" onclick="speak('mirror')">🔊</button></li>
+          <li>"Besides hiking Ali Mountain, did you do anything else?" <button class="speak-btn" onclick="speak('Besides hiking Ali Mountain, did you do anything else?')">🔊</button></li>
+          <li>"I also visited an old train station called Fenchihu and ate some bento." <button class="speak-btn" onclick="speak('I also visited an old train station called Fenchihu and ate some bento.')">🔊</button></li>
+          <li>"Have you celebrated any milestone birthdays recently?" <button class="speak-btn" onclick="speak('Have you celebrated any milestone birthdays recently?')">🔊</button></li>
+          <li>"The best birthday gift I got as a kid was my first bicycle." <button class="speak-btn" onclick="speak('The best birthday gift I got as a kid was my first bicycle.')">🔊</button></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- QUIZ SECTION -->
+    <section id="quiz-section" class="hidden">
+      <div class="sticky-bar">
+        <div class="stats">
+          Score: <span id="score">0</span> / 50 &nbsp;|&nbsp; Answered: <span id="answered">0</span> / 50
+        </div>
+        <div>
+          <button class="btn-sm" onclick="filterWrong()">Show Unanswered / Wrong</button>
+          <button class="btn-sm primary" onclick="resetQuiz()">Reset Quiz</button>
+        </div>
+        <div class="progress-wrap"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+
+      <div class="section-nav">
+        <button class="btn-sm" onclick="jumpTo(0)">Part 1: Vocab (1-10)</button>
+        <button class="btn-sm" onclick="jumpTo(10)">Part 2: -able &amp; Phrases (11-20)</button>
+        <button class="btn-sm" onclick="jumpTo(20)">Part 3: Grammar (21-30)</button>
+        <button class="btn-sm" onclick="jumpTo(30)">Part 4: Engoo 10 Years (31-40)</button>
+        <button class="btn-sm" onclick="jumpTo(40)">Part 5: Conversation (41-50)</button>
+      </div>
+
+      <div id="quiz-container"></div>
+    </section>
+  </main>
+
+  <footer>
+    Prepared for Irene &bull; Reference: <a href="https://engoo.com/app/lessons/what-were-you-like-10-years-ago/ag2U3JsTEe6GfG_PwyI-wA" target="_blank" rel="noopener">Engoo Lesson 99</a>
+  </footer>
+
+  <script>
+    function speak(text) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';
+      u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    }
+
+    function switchTab(name, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('review-section').classList.toggle('hidden', name !== 'review');
+      document.getElementById('quiz-section').classList.toggle('hidden', name !== 'quiz');
+    }
+
+    const questions = [
+      // Part 1: Vocabulary & Word Forms (1-10)
+      { sec: "Part 1: Vocabulary & Word Forms", q: "I like talking to new people and going to parties. I am an ___.", opts: ["extrovert", "extroverted", "introvert", "immature"], ans: 0, exp: "Use the noun 'an extrovert' after 'an'. ('I am extroverted' has no 'an'.)" },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "She is very quiet and prefers staying home alone. She is ___.", opts: ["introvert", "introverted", "extrovert", "energetic"], ans: 1, exp: "Use the adjective 'introverted' after 'is' without an article." },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "The trees on Ali Mountain are very old. They are ___ sacred trees.", opts: ["ancient", "youthful", "immature", "wrinkled"], ans: 0, exp: "'Ancient' means very old (古老的)." },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "Many people respect this temple because it is a ___ place.", opts: ["laughable", "sacred", "sharp", "electric"], ans: 1, exp: "'Sacred' means 神聖的." },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "Kids usually have a lot of ___ and never get tired.", opts: ["energetic", "energy", "active", "youthful"], ans: 1, exp: "After 'a lot of', we need the noun 'energy' (能量)." },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "Even at 70, my grandfather is still very ___ and goes hiking every morning.", opts: ["energy", "electricity", "energetic", "society"], ans: 2, exp: "'Energetic' is the adjective (精力充沛的)." },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "Alex has become much more ___ and enjoys chatting with coworkers.", opts: ["society", "sociable", "wrinkle", "sharp"], ans: 1, exp: "'Sociable' (adj.) means friendly and enjoying company (善於交際的)." },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "He acts like a little kid when he gets angry. He is so ___.", opts: ["mature", "immature", "youthful", "reasonable"], ans: 1, exp: "'Immature' means 不成熟的." },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "In English, 'sharp' can mean a knife is 銳利的, or a person's mind is ___.", opts: ["smart / quick", "tired", "old", "quiet"], ans: 0, exp: "'Sharp' means both 銳利的 and 聰明敏銳的." },
+      { sec: "Part 1: Vocabulary & Word Forms", q: "A phone, laptop, and TV are examples of ___ devices.", opts: ["electricity", "electronic", "energetic", "active"], ans: 1, exp: "'Electronic' refers to devices using microchips/circuits (電子的)." },
+
+      // Part 2: -able Suffixes & Phrases (11-20)
+      { sec: "Part 2: -able Suffixes & Phrases", q: "The hotel isn't expensive at all. The price is very ___.", opts: ["affordable", "laughable", "wrinkled", "ancient"], ans: 0, exp: "'Affordable' means 付得起的 / 平價的." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "I don't have too many clients today, so my workload is ___.", opts: ["manageable", "collectable", "sacred", "immature"], ans: 0, exp: "'Manageable' means 可以應付的 / 撐得住的." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "NT$500 for a full dinner set is fair. The price is ___.", opts: ["reasonable", "laughable", "usable", "introverted"], ans: 0, exp: "'Reasonable' means 合理的." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "This pencil is still sharp and not broken. It is ___.", opts: ["usable", "readable", "enjoyable", "youthful"], ans: 0, exp: "'Usable' means 可以使用的、沒壞的." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "We had a great time on the hike. It was a very ___ trip.", opts: ["enjoyable", "laughable", "wrinkled", "electric"], ans: 0, exp: "'Enjoyable' means 令人愉快的." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "His handwriting is very neat and easy to read. It is ___.", opts: ["readable", "affordable", "manageable", "collectable"], ans: 0, exp: "'Readable' means 易讀的、清晰的." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "That silly excuse is completely ___; nobody will believe it.", opts: ["laughable", "sacred", "mature", "sociable"], ans: 0, exp: "'Laughable' means 可笑的." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "Which word has the SAME meaning as 'these days'?", opts: ["10 years ago", "nowadays", "yesterday", "in 10 years"], ans: 1, exp: "'These days' = 'nowadays' (最近、現今)." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "When people grow very old, we sometimes say they are '___'.", opts: ["old and gray", "young and sharp", "here and there", "loud and clear"], ans: 0, exp: "'Old and gray' is a common phrase for growing old (年老髮白)." },
+      { sec: "Part 2: -able Suffixes & Phrases", q: "My dog loves to run after a ball and ___ it.", opts: ["fetch", "retire", "graduate", "afford"], ans: 0, exp: "'Fetch' means to go get and bring back / catch (接住、去拿來)." },
+
+      // Part 3: Grammar - Demonstratives & Past Tense (21-30)
+      { sec: "Part 3: Grammar", q: "___ people over there are very noisy.", opts: ["This", "That", "These", "Those"], ans: 3, exp: "'People' is plural and 'over there' is far, so use 'Those'." },
+      { sec: "Part 3: Grammar", q: "___ person standing over there is immature.", opts: ["This", "That", "These", "Those"], ans: 1, exp: "'Person' is singular and far ('over there'), so use 'That'." },
+      { sec: "Part 3: Grammar", q: "Look at ___ nail polish colors right here in my hand.", opts: ["this", "that", "these", "there"], ans: 2, exp: "'Colors' is plural and near ('right here'), so use 'these'." },
+      { sec: "Part 3: Grammar", q: "The bento box ___ very delicious yesterday!", opts: ["is", "are", "was", "were"], ans: 2, exp: "Singular subject ('bento box') + past time ('yesterday') -> 'was'." },
+      { sec: "Part 3: Grammar", q: "We ___ some bento at Fenchihu after the hike.", opts: ["eat", "ate", "eaten", "eating"], ans: 1, exp: "Past tense of 'eat' is 'ate'." },
+      { sec: "Part 3: Grammar", q: "What did you see on the hike? — I ___ many ancient trees.", opts: ["see", "saw", "seen", "seeing"], ans: 1, exp: "Past tense of 'see' is 'saw'." },
+      { sec: "Part 3: Grammar", q: "How long ___ the hike? — We hiked for 2 hours.", opts: ["is", "did", "was", "were"], ans: 2, exp: "'The hike' is singular and in the past, so use 'was'." },
+      { sec: "Part 3: Grammar", q: "When I was a child, I ___ eat birthday cake and blow out candles.", opts: ["use to", "used to", "am used", "using to"], ans: 1, exp: "'Used to + verb' describes past habits." },
+      { sec: "Part 3: Grammar", q: "Please put your bag right ___, next to my chair.", opts: ["there", "here", "those", "that"], ans: 1, exp: "Near the speaker ('next to my chair') -> 'here'." },
+      { sec: "Part 3: Grammar", q: "You need to do some physical ___ every week to stay healthy.", opts: ["active", "activity", "energetically", "wrinkle"], ans: 1, exp: "'Physical activity' uses the noun 'activity'." },
+
+      // Part 4: Engoo Lesson 99 - What Were You Like 10 Years Ago? (31-40)
+      { sec: "Part 4: Engoo Lesson 99", q: "What ___ you like 10 years ago?", opts: ["are", "was", "were", "did"], ans: 2, exp: "'You' takes 'were' in the past tense." },
+      { sec: "Part 4: Engoo Lesson 99", q: "How have you ___ in the last 10 years?", opts: ["change", "changing", "changed", "changes"], ans: 2, exp: "Present perfect: 'have' + past participle ('changed')." },
+      { sec: "Part 4: Engoo Lesson 99", q: "I ___ become more confident over the years.", opts: ["am", "have", "was", "did"], ans: 1, exp: "'Have become' is present perfect for change over time." },
+      { sec: "Part 4: Engoo Lesson 99", q: "How ___ your life changed?", opts: ["has", "did", "does", "is"], ans: 0, exp: "'Your life' is singular, so use 'has' + 'changed'." },
+      { sec: "Part 4: Engoo Lesson 99", q: "I got ___ in my mid-20s.", opts: ["marry", "married", "marrying", "marriage"], ans: 1, exp: "The fixed phrase is 'get married' (past: 'got married')." },
+      { sec: "Part 4: Engoo Lesson 99", q: "What do you think your life ___ be like in 10 years?", opts: ["will", "does", "has", "was"], ans: 0, exp: "Use 'will' for future predictions ('in 10 years')." },
+      { sec: "Part 4: Engoo Lesson 99", q: "By the time we have kids, I ___ be wrinkled and gray!", opts: ["might", "did", "have", "was"], ans: 0, exp: "'Might be' expresses possibility in the future." },
+      { sec: "Part 4: Engoo Lesson 99", q: "Our kids have ___ out of home, so the house feels quiet.", opts: ["retire", "moved", "traveled", "hardworking"], ans: 1, exp: "'Move out of home' -> present perfect 'have moved out of home'." },
+      { sec: "Part 4: Engoo Lesson 99", q: "Find the mistake: 'What do you think your life will be like at 10 years?'", opts: ["Change 'will' to 'was'", "Change 'at' to 'in'", "Change 'like' to 'liking'", "No mistake"], ans: 1, exp: "For future time from now, say 'in 10 years', not 'at 10 years'." },
+      { sec: "Part 4: Engoo Lesson 99", q: "Find the mistake: 'I'm thinking about buy a house.'", opts: ["Change 'buy' to 'buying'", "Change 'I'm' to 'I'", "Change 'house' to 'houses'", "No mistake"], ans: 0, exp: "After a preposition ('about'), use verb-ing: 'thinking about buying'." },
+
+      // Part 5: Daily Conversation, Birthdays & Travel (41-50)
+      { sec: "Part 5: Daily Conversation", q: "How is everything so far this week? — ___", opts: ["I hiked for 2 hours.", "Everything is good so far this week.", "Yes, I am.", "I'm an extrovert."], ans: 1, exp: "Natural reply: 'Everything is good so far this week.'" },
+      { sec: "Part 5: Daily Conversation", q: "Do you have any plans for the weekend? — No, I ___ any plans.", opts: ["not have", "don't have", "doesn't have", "am not have"], ans: 1, exp: "'I don't have any plans for the weekend.'" },
+      { sec: "Part 5: Daily Conversation", q: "___ hiking Ali Mountain, did you do anything else?", opts: ["Besides", "Because", "Between", "Behind"], ans: 0, exp: "'Besides + V-ing' means 'In addition to...' (除了...之外)." },
+      { sec: "Part 5: Daily Conversation", q: "Have you celebrated any ___ birthdays recently, like your 30th?", opts: ["milestone", "wrinkled", "manageable", "electric"], ans: 0, exp: "A 'milestone birthday' is a big age like 20th, 30th, 40th, 50th." },
+      { sec: "Part 5: Daily Conversation", q: "Have you celebrated any milestone birthdays recently? — Yes, ___.", opts: ["I did", "I have", "I am", "I was"], ans: 1, exp: "Question starts with 'Have you...', so short answer is 'Yes, I have.'" },
+      { sec: "Part 5: Daily Conversation", q: "On my birthday as a kid, I used to ___ the candles on the cake.", opts: ["blow out", "fetch", "retire", "graduate"], ans: 0, exp: "'Blow out candles' means 吹熄蠟燭." },
+      { sec: "Part 5: Daily Conversation", q: "The best birthday gift I ___ as a kid was my first bicycle.", opts: ["get", "got", "gotten", "getting"], ans: 1, exp: "Past tense: 'got'." },
+      { sec: "Part 5: Daily Conversation", q: "Are you looking forward to your next birthday? — Yes, ___.", opts: ["I do", "I have", "I am", "I will"], ans: 2, exp: "Question uses 'Are you...', so answer 'Yes, I am.'" },
+      { sec: "Part 5: Daily Conversation", q: "Someone who paints and cares for customers' toenails is a ___.", opts: ["pedicurist", "manicurist", "extrovert", "collectable"], ans: 0, exp: "'Pedicurist' = 足部美甲師; 'manicurist' = 手部美甲師; 'nail technician' covers both." },
+      { sec: "Part 5: Daily Conversation", q: "Which syllable is stressed in 'extroverted'?", opts: ["ex-TRO-ver-ted", "EX-tro-ver-ted", "ex-tro-VER-ted", "ex-tro-ver-TED"], ans: 1, exp: "Primary stress is on the first syllable: EX-tro-ver-ted (just like IN-tro-ver-ted)." }
+    ];
+
+    const state = new Array(questions.length).fill(null);
+
+    function renderQuiz() {
+      const container = document.getElementById('quiz-container');
+      container.innerHTML = '';
+      questions.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = 'q-card';
+        div.id = 'q-' + idx;
+        div.innerHTML = `
+          <div class="q-meta">${item.sec} &bull; Question ${idx + 1} of ${questions.length}</div>
+          <div class="q-text">${idx + 1}. ${item.q} <button class="speak-btn" onclick="speak('${item.q.replace(/'/g, "\\'").replace(/___/g, 'blank')}')">🔊</button></div>
+          <div class="opts">
+            ${item.opts.map((o, oi) => `<button class="opt-btn" onclick="choose(${idx}, ${oi})">${String.fromCharCode(65 + oi)}. ${o}</button>`).join('')}
+          </div>
+          <div class="feedback" id="fb-${idx}"></div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function choose(qIdx, oIdx) {
+      if (state[qIdx] !== null) return;
+      const item = questions[qIdx];
+      const isOk = oIdx === item.ans;
+      state[qIdx] = isOk;
+
+      const card = document.getElementById('q-' + qIdx);
+      const btns = card.querySelectorAll('.opt-btn');
+      btns.forEach((b, i) => {
+        b.disabled = true;
+        if (i === item.ans) b.classList.add('correct');
+        else if (i === oIdx && !isOk) b.classList.add('wrong');
+      });
+
+      const fb = document.getElementById('fb-' + qIdx);
+      fb.className = 'feedback ' + (isOk ? 'ok' : 'bad');
+      fb.textContent = (isOk ? '✓ Correct! ' : '✗ Not quite. ') + item.exp;
+      updateStats();
+    }
+
+    function updateStats() {
+      const answered = state.filter(v => v !== null).length;
+      const score = state.filter(v => v === true).length;
+      document.getElementById('answered').textContent = answered;
+      document.getElementById('score').textContent = score;
+      document.getElementById('progress-fill').style.width = ((answered / questions.length) * 100) + '%';
+    }
+
+    let showingOnlyWrong = false;
+    function filterWrong() {
+      showingOnlyWrong = !showingOnlyWrong;
+      questions.forEach((_, idx) => {
+        const card = document.getElementById('q-' + idx);
+        if (showingOnlyWrong && state[idx] === true) card.classList.add('hidden');
+        else card.classList.remove('hidden');
+      });
+    }
+
+    function jumpTo(idx) {
+      showingOnlyWrong = false;
+      document.querySelectorAll('.q-card').forEach(c => c.classList.remove('hidden'));
+      document.getElementById('q-' + idx).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetQuiz() {
+      state.fill(null);
+      showingOnlyWrong = false;
+      renderQuiz();
+      updateStats();
+    }
+
+    renderQuiz();
+  </script>
+</body>
+</html>
